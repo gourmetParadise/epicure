@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.wf.epicure.mapper.IngredientsMapper">
+
+
+    <resultMap id="rm" type="Ingredients">
+        <id column="ingre_id" property="IngreId"/>
+        <result column="ingre_name" property="source"/>
+        <result column="ingre_num" property="amount"/>
+        <result column="cookbook_id" property="cookbookId"/>
+        <result column="cookbook_name" property="cookbookName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="addList" useGeneratedKeys="true" keyProperty="IngreId">
+        INSERT INTO ingredients(ingre_name, ingre_num, cookbook_id, cookbook_name)
+        VALUES
+        <foreach collection="list" item="Ingre" separator=",">
+            (
+                #{Ingre.source, jdbcType=VARCHAR},
+                #{Ingre.amount, jdbcType=VARCHAR},
+                #{Ingre.cookbookId, jdbcType=INTEGER},
+                #{Ingre.cookbookName, jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <update id="deleteIngre" parameterType="int">
+        UPDATE ingredients
+        SET status = -1
+        WHERE cookbook_id = #{cookbookId}
+    </update>
+
+    <update id="updateIngre" parameterType="int">
+        UPDATE ingredients
+        SET status = -2
+        WHERE cookbook_id = #{cookbookId} and status = 0;
+    </update>
+
+
+
+</mapper>

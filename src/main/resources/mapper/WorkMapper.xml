@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.wf.epicure.mapper.WorkMapper">
+
+    <resultMap id="rm" type="Work">
+        <id column="work_id" property="workId"/>
+        <result column="work_name" property="workName"/>
+        <result column="cookbook_id" property="cookbookId"/>
+        <result column="cookbook_name" property="cookbookName"/>
+        <result column="user_name" property="userName"/>
+        <result column="work_picture" property="workImage"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="work_desc" property="wordDesc"/>
+        <result column="like_num" property="likeNum"/>
+        <result column="read_num" property="readNum"/>
+        <result column="work_score" property="workScore"/>
+    </resultMap>
+
+    <insert id="addWork" useGeneratedKeys="true" keyProperty="workId">
+        INSERT INTO cookbook(work_id, work_picture)
+        VALUES (
+          #{workId},
+          #{workImage, jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="updateWork" parameterType="CookBook">
+        UPDATE WORK SET
+            work_name = #{workName},
+            cookbook_id = #{cookbookId},
+            cookbook_name = #{cookbookName},
+            user_name = #{userName},
+            work_desc = #{workDesc},
+            update_time = NOW()
+            WHERE cookbook_id = #{cookbookId}
+    </update>
+
+    <!--<select id="queryById" resultMap="rm">-->
+    <!--SELECT * FROM cookbook-->
+    <!--WHERE cookbook_id=#{cookbookId} and user_name=#{userName} and status = 0-->
+    <!--</select>-->
+
+    <!--<select id="queryListByName" parameterType="string" resultMap="rm">-->
+    <!--SELECT * FROM cookbook-->
+    <!--WHERE user_name=#{userName} and status = 0-->
+    <!--</select>-->
+
+
+    <!--<update id="updateImage">-->
+        <!--UPDATE cookbook SET-->
+          <!--cookbook_picture = #{imagePath}-->
+          <!--WHERE cookbook_id = #{cookbookId}-->
+    <!--</update>-->
+
+    <!--<update id="deleteCookBook">-->
+        <!--UPDATE cookbook SET-->
+            <!--status = -1-->
+        <!--WHERE cookbook_id=#{cookbookId} and user_name=#{userName}-->
+    <!--</update>-->
+
+</mapper>

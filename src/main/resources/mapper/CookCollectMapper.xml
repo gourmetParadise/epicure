@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.wf.epicure.mapper.CookCollectMapper">
+
+    <!-- type为实体类User，包名已经配置，可以直接写类名 -->
+    <resultMap id="rm" type="CookCollect">
+        <id column="collect_id" property="collectId"/>
+        <result column="user_name" property="userName"/>
+        <result column="cookbook_id" property="cookbookId"/>
+        <result column="cookbook_name" property="cookbookName"/>
+        <result column="cookbook_image" property="cookImage"/>
+        <result column="collect_reason" property="collectReason"/>
+        <result column="collect_time" property="collectTime"/>
+    </resultMap>
+
+    <insert id="addCollect" parameterType="CookCollect" useGeneratedKeys="true" keyProperty="collectId">
+        INSERT INTO cook_collect(user_name,cookbook_id,cookbook_name,cookbook_image,collect_reason)
+        VALUES
+          (
+            #{userName,jdbcType=VARCHAR},
+            #{cookbookId,jdbcType=INTEGER},
+            #{cookbookName,jdbcType=VARCHAR},
+            #{cookImage,jdbcType=VARCHAR},
+            #{collectReason,jdbcType=VARCHAR}
+          )
+    </insert>
+
+    <select id="queryListByName" parameterType="string" resultMap="rm" >
+        SELECT * FROM cook_collect
+        WHERE user_name = #{userName} and status = 0
+    </select>
+
+    <update id="deleteCollect">
+        UPDATE cook_collect
+            SET status = -1
+        WHERE collect_id = #{collectId} and user_name = #{userName}
+    </update>
+
+        
+    <select id="isCollect" resultType="int">
+        SELECT COUNT(collect_id)
+        FROM cook_collect
+        WHERE user_name = #{userName} and cookbook_id = #{cookbookId} and status = 0
+    </select>
+
+</mapper>

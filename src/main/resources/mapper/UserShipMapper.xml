@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.wf.epicure.mapper.UserShipMapper">
+
+    <!-- type为实体类User，包名已经配置，可以直接写类名 -->
+    <resultMap id="rm" type="UserShip">
+        <id column="usership_id" property="usershipId"/>
+        <result column="friend_nickname" property="friendName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="user_photo" property="friendPhoto"/>
+        <result column="cook_count" property="cookCount"/>
+    </resultMap>
+
+    <insert id="addShip" parameterType="UserShip" useGeneratedKeys="true" keyProperty="userShipId">
+        INSERT INTO usership(self_nickname, friend_nickname, ship_type)
+        VALUES
+            (
+            #{selfName,jdbcType=VARCHAR},
+            #{friendName,jdbcType=VARCHAR},
+            #{shipType,jdbcType=INTEGER}
+            )
+    </insert>
+
+    <update id="increAddNum" parameterType="String">
+        UPDATE USER
+            SET add_num = add_num + 1
+        WHERE user_nickname = #{userName}
+    </update>
+
+    <update id="increAddedNum" parameterType="String">
+        UPDATE USER
+        SET added_num = added_num + 1
+        WHERE user_nickname = #{userName}
+    </update>
+
+    <update id="decreAddNum" parameterType="String">
+        UPDATE USER
+        SET add_num = add_num - 1
+        WHERE user_nickname = #{userName}
+    </update>
+
+    <update id="decreAddedNum" parameterType="String">
+        UPDATE USER
+        SET added_num = added_num - 1
+        WHERE user_nickname = #{userName}
+    </update>
+
+    <select id="addshiplist" parameterType="string" resultMap="rm">
+        SELECT s.usership_id, s.friend_nickname, u.user_photo, u.cook_count, s.create_time
+        FROM (SELECT * FROM usership WHERE self_nickname = #{selfName} AND ship_type = 1 AND ship_status = 1) s
+            LEFT JOIN USER u
+        ON s.friend_nickname = u.user_nickname
+    </select>
+
+    <select id="addedshiplist" parameterType="string" resultMap="rm">
+        SELECT s.usership_id, s.friend_nickname, u.user_photo, u.cook_count, s.create_time
+        FROM (SELECT * FROM usership WHERE self_nickname = #{selfName} AND ship_type = -1 AND ship_status = 1) s
+            LEFT JOIN USER u
+        ON s.friend_nickname = u.user_nickname
+    </select>
+
+    <update id="deleteShip">
+        UPDATE usership
+            SET ship_status = 0,
+            cancel_time = NOW()
+        WHERE self_nickname = #{selfName} and friend_nickname = #{friendName} and ship_type = #{shipType}
+    </update>
+
+    <select id="isFollow" resultType="int">
+        SELECT count(usership_id)
+        FROM usership
+        WHERE self_nickname = #{selfName} and friend_nickName = #{friendName} and ship_type = 1 and ship_status = 1
+    </select>
+
+
+</mapper>

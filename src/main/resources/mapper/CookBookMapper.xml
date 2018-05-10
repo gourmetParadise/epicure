@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.wf.epicure.mapper.CookBookMapper">
+
+    <resultMap id="rm" type="CookBook">
+        <id column="cookbook_id" property="cookbookId"/>
+        <result column="cookbook_name" property="cookbookName"/>
+        <result column="cookbook_type" property="cookbookType"/>
+        <result column="cookbook_occasion" property="cookbookOccasion"/>
+        <result column="cookbook_crowd" property="cookbookCrowd"/>
+        <result column="cookbook_effect" property="cookbookEffect"/>
+        <result column="cookbook_material" property="materials"/>
+        <result column="cook_step" property="cookbookSteps"/>
+        <result column="cookbook_picture" property="cookImage"/>
+        <result column="birth_time" property="birthTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="cookbook_desc" property="cookbookDesc"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_photo" property="userPhoto"/>
+        <result column="collect_num" property="collectNum"/>
+        <result column="read_num" property="readNum"/>
+        <result column="cookbook_tips" property="cookbookTips"/>
+    </resultMap>
+
+    <resultMap id="rm2" type="CookBook">
+        <id column="cookbook_id" property="cookbookId"/>
+        <result column="cookbook_name" property="cookbookName"/>
+        <result column="cookbook_picture" property="cookImage"/>
+        <result column="cookbook_desc" property="cookbookDesc"/>
+    </resultMap>
+
+    <insert id="addCookBook" parameterType="CookBook" useGeneratedKeys="true" keyProperty="cookbookId">
+        INSERT INTO cookbook(cookbook_id, cookbook_picture)
+        VALUES (
+          #{cookbookId},
+          #{cookImage, jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <select id="getImagePath" parameterType="int" resultType="string">
+        SElECT cookbook_picture FROM cookbook
+        WHERE cookbook_id = #{cookbookId}
+    </select>
+
+    <select id="queryById" resultMap="rm">
+        SELECT c.*, u.user_photo
+        FROM (SELECT * FROM cookbook WHERE cookbook_id = #{cookbookId} AND STATUS = 0) c LEFT JOIN USER u
+        ON c.user_name = u.user_nickname
+    </select>
+
+    <select id="queryListByName" parameterType="string" resultMap="rm">
+        SELECT * FROM cookbook
+        WHERE user_name=#{userName} and status = 0
+    </select>
+
+    <select id="queryList" resultMap="rm2">
+        SELECT cookbook_id, cookbook_name, cookbook_picture, cookbook_desc
+        FROM cookbook
+        WHERE STATUS = 0 ORDER BY birth_time DESC LIMIT 9
+    </select>
+
+    <update id="increCookCount" parameterType="string">
+        UPDATE USER
+            SET cook_count = cook_count + 1
+        WHERE  user_nickname = #{userName}
+    </update>
+
+    <update id="decreCookCount" parameterType="string">
+        UPDATE USER
+        SET cook_count = cook_count - 1
+        WHERE user_nickname = #{userName}
+    </update>
+
+    <select id="getCookCount" parameterType="string">
+        SELECT count(cookbook_id)
+        FROM cookbook
+        WHERE user_name = #{userName} AND status = 0
+    </select>
+
+    <update id="updateCookBook" parameterType="CookBook">
+        UPDATE cookbook SET
+            cookbook_name = #{cookbookName},
+            cookbook_material = #{materials},
+            cook_step = #{cookbookSteps},
+            cookbook_desc = #{cookbookDesc},
+            <if test="userName != null">user_name = #{userName},</if>
+            cookbook_tips = #{cookbookTips},
+            update_time = NOW()
+            WHERE cookbook_id = #{cookbookId}
+    </update>
+
+    <update id="updateImage">
+        UPDATE cookbook SET
+          cookbook_picture = #{imagePath}
+          WHERE cookbook_id = #{cookbookId}
+    </update>
+
+    <update id="deleteCookBook">
+        UPDATE cookbook SET
+            status = -1
+        WHERE cookbook_id=#{cookbookId} and user_name=#{userName}
+    </update>
+
+</mapper>
