@@ -60,18 +60,18 @@ public class CookCollectController {
         return JSONObject.toJSONString(new ResultEntity<>(ErrorCode.QUERY_SUCCESS.getStatus(), "", collectList));
     }
 
-    @RequestMapping(value = "/{collectId}/{userName}/delete", method = RequestMethod.GET, produces = "application/json")
-    public String deleteCollect(@PathVariable("userName") String userName, @PathVariable("collectId") Integer collectId){
-        if(collectService.deleteCollect(userName, collectId)){
+    @RequestMapping(value = "/{cookbookId}/{userName}/delete", method = RequestMethod.GET, produces = "application/json")
+    public String deleteCollect(@PathVariable("userName") String userName, @PathVariable("cookbookId") Integer cookbookId){
+        if(collectService.deleteCollect(userName, cookbookId)){
             return JSONObject.toJSONString(new ResultEntity<>(ErrorCode.DEL_SUCC.getStatus(), "", ErrorCode.DEL_SUCC.getMsg()));
         } else {
             return JSONObject.toJSONString(new ResultEntity<>(ErrorCode.DEL_FAIL.getStatus(), "", ErrorCode.DEL_FAIL.getMsg()));
         }
     }
 
-    @RequestMapping(value = "/{collectId}/{userName}/iscollect", method = RequestMethod.GET, produces = "application/json")
-    public String isCollect(@PathVariable("userName") String userName, @PathVariable("collectId") Integer collectId){
-        if(collectService.isCollect(userName, collectId)){
+    @RequestMapping(value = "/{cookbookId}/{userName}/iscollect", method = RequestMethod.GET, produces = "application/json")
+    public String isCollect(@PathVariable("userName") String userName, @PathVariable("cookbookId") Integer cookbookId){
+        if(collectService.isCollect(userName, cookbookId)){
             return JSONObject.toJSONString(new ResultEntity<>(ErrorCode.IS_COLLECT.getStatus(), "", ErrorCode.IS_COLLECT.getMsg()));
         } else {
             return JSONObject.toJSONString(new ResultEntity<>(ErrorCode.NOT_COLLECT.getStatus(), "", ErrorCode.NOT_COLLECT.getMsg()));

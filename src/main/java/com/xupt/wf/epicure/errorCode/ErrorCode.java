@@ -39,8 +39,8 @@ public enum ErrorCode {
     IS_COLLECT(10000, "已收藏"),
     NOT_COLLECT(10001, "没收藏"),
 
-    DEL_SUCC(10000, "删除成功"),
-    DEL_FAIL(10001, "删除失败"),
+    DEL_SUCC(10000, "取消收藏成功"),
+    DEL_FAIL(10001, "取消收藏失败"),
 
     ADD_SUCC(10000, "关注成功"),
     ADD_FAIL(10000, "关注失败"),

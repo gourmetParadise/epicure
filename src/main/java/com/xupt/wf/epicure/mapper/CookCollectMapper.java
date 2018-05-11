@@ -16,7 +16,7 @@ public interface CookCollectMapper {
 
     int addCollect(CookCollect cookCollect);
 
-    int deleteCollect(@Param("userName") String userName, @Param("collectId") Integer collectId);
+    int deleteCollect(@Param("userName") String userName, @Param("cookbookId") Integer collectId);
 
     List<CookCollect> queryListByName(String userName);
 

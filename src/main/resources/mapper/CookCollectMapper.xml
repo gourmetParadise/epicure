@@ -35,7 +35,7 @@
     <update id="deleteCollect">
         UPDATE cook_collect
             SET status = -1
-        WHERE collect_id = #{collectId} and user_name = #{userName}
+        WHERE cookbook_id = #{cookbookId} and user_name = #{userName} and status = 0
     </update>
 
         

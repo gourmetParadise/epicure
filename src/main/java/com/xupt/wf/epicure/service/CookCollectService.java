@@ -41,9 +41,9 @@ public class CookCollectService {
         return result;
     }
 
-    public boolean deleteCollect(String userName, Integer collectId){
+    public boolean deleteCollect(String userName, Integer cookbookId){
         boolean result = false;
-        int count = cookCollectMapper.deleteCollect(userName, collectId);
+        int count = cookCollectMapper.deleteCollect(userName, cookbookId);
         if(count == 1){
             result = true;
         }

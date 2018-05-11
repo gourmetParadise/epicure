@@ -65,7 +65,7 @@
         UPDATE usership
             SET ship_status = 0,
             cancel_time = NOW()
-        WHERE self_nickname = #{selfName} and friend_nickname = #{friendName} and ship_type = #{shipType}
+        WHERE self_nickname = #{selfName} and friend_nickname = #{friendName} and ship_type = #{shipType} and ship_type = 1
     </update>
 
     <select id="isFollow" resultType="int">
