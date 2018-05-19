@@ -36,10 +36,8 @@ public class CookBook {
 
     private Integer cookbookId;
     private String cookbookName;
-    private String cookbookType;
-    private String cookbookOccasion;
-    private String cookbookCrowd;
-    private String cookbookEffect;
+    private Integer typeId;         //分类Id
+    private String cookbookType;    //被推荐至的类型
     private String materials;
     private String cookbookSteps;
     private String cookImage;
@@ -52,6 +50,23 @@ public class CookBook {
     private Integer collectNum;
     private Integer readNum;
     private List<Ingredient> ingreList;
+    private Integer cookNum;
+    private Float score;
+
+    public String getCookbookType() {
+        return cookbookType;
+    }
+    public void setCookbookType(String cookbookType) {
+        this.cookbookType = cookbookType;
+    }
+
+    public Integer getTypeId() {
+        return typeId;
+    }
+    
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
+    }
 
     public Integer getCookbookId() {
         return cookbookId;
@@ -67,38 +82,6 @@ public class CookBook {
 
     public void setCookbookName(String cookbookName) {
         this.cookbookName = cookbookName;
-    }
-
-    public String getCookbookType() {
-        return cookbookType;
-    }
-
-    public void setCookbookType(String cookbookType) {
-        this.cookbookType = cookbookType;
-    }
-
-    public String getCookbookOccasion() {
-        return cookbookOccasion;
-    }
-
-    public void setCookbookOccasion(String cookbookOccasion) {
-        this.cookbookOccasion = cookbookOccasion;
-    }
-
-    public String getCookbookCrowd() {
-        return cookbookCrowd;
-    }
-
-    public void setCookbookCrowd(String cookbookCrowd) {
-        this.cookbookCrowd = cookbookCrowd;
-    }
-
-    public String getCookbookEffect() {
-        return cookbookEffect;
-    }
-
-    public void setCookbookEffect(String cookbookEffect) {
-        this.cookbookEffect = cookbookEffect;
     }
 
     public String getMaterials() {
@@ -194,5 +177,21 @@ public class CookBook {
 
     public void setIngreList(List<Ingredient> ingreList) {
         this.ingreList = ingreList;
+    }
+
+    public Integer getCookNum() {
+        return cookNum;
+    }
+
+    public void setCookNum(Integer cookNum) {
+        this.cookNum = cookNum;
+    }
+
+    public Float getScore() {
+        return score;
+    }
+
+    public void setScore(Float score) {
+        this.score = score;
     }
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.wf.epicure.mapper.UserHistoryMapper">
+
+    <!-- type为实体类User，包名已经配置，可以直接写类名 -->
+    <resultMap id="rm" type="UserHistory">
+        <id  column="record_id" jdbcType="INTEGER" property="recordId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="cookbook_id" jdbcType="INTEGER" property="cookbookId" />
+        <result column="cookbook_name" jdbcType="VARCHAR" property="cookbookName"/>
+        <result column="materials" jdbcType="VARCHAR" property="materials"/>
+        <result column="cookbook_type" jdbcType="VARCHAR" property="cookbookType"/>
+    </resultMap>
+    
+    <insert id="addUserHistory" parameterType="UserHistory" useGeneratedKeys="true" keyProperty="recordId">
+        INSERT INTO user_history(user_name, cookbook_id, cookbook_name, materials, type_id)
+         VALUES (
+                  #{userName, jdbcType = VARCHAR},
+                  #{cookbookId, jdbcType = INTEGER},
+                  #{cookbookName, jdbcType = VARCHAR},
+                  #{materials, jdbcType = VARCHAR},
+                  #{typeId, jdbcType = INTEGER}
+                )
+    </insert>
+
+    <select id="isExist" parameterType="string" resultType="_int">
+        SELECT count(user_id)
+        FROM USER
+        WHERE cookbook_id=#{cookbookId}
+    </select>
+
+    <select id="queryByName" parameterType="string" resultMap="rm">
+        SELECT DISTINCT(cookbook_id) cookbookId, cookbook_name, materials, type_id FROM user_history
+        WHERE user_name = #{userName} ORDER BY create_time desc
+    </select>
+
+
+
+
+
+</mapper>

@@ -28,7 +28,7 @@
     </select>
 
     <insert id="registerUser" parameterType="map" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO USER(user_id,user_nickName,user_email,password)
+        INSERT INTO user(user_id,user_nickName,user_email,password)
         VALUES(#{userId},
             #{userNickName,jdbcType=VARCHAR},
             #{userEmail,jdbcType=VARCHAR},
@@ -36,22 +36,22 @@
     </insert>
 
     <select id="queryPhoto" parameterType="string" resultType="string">
-        SELECT user_photo  FROM USER
+        SELECT user_photo  FROM user
         WHERE user_nickname = #{nickName}
     </select>
 
     <select id="queryByName" parameterType="string" resultMap="rm" >
-        SELECT * FROM USER
+        SELECT * FROM user
         WHERE user_nickname = #{nickName}
     </select>
 
     <select id="queryAll" resultMap="rm">
         SELECT *
-        FROM USER
+        FROM user
     </select>
 
     <update id="updateUser" parameterType="User">
-        UPDATE USER SET
+        UPDATE user SET
             user_sex=#{userSex},
             birth_date=#{birthDate},
             native_place=#{nativePlace},
@@ -62,21 +62,21 @@
     </update>
 
     <update id="uploadPhoto" parameterType="string">
-      UPDATE USER SET
+      UPDATE user SET
             user_photo = #{filePath}
         WHERE
             user_nickname=#{nickName}
     </update>
 
     <update id="updatePassword" parameterType="string">
-      UPDATE USER SET
+      UPDATE user SET
             password = #{password}
         WHERE
             user_nickname=#{userNickName}
     </update>
 
     <select id="queryPassByName" parameterType="string" resultType="string">
-        SELECT password from USER WHERE user_nickname=#{nickName}
+        SELECT password from user WHERE user_nickname=#{nickName}
     </select>
 
 </mapper>

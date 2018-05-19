@@ -24,25 +24,25 @@
     </insert>
 
     <update id="increAddNum" parameterType="String">
-        UPDATE USER
+        UPDATE user
             SET add_num = add_num + 1
         WHERE user_nickname = #{userName}
     </update>
 
     <update id="increAddedNum" parameterType="String">
-        UPDATE USER
+        UPDATE user
         SET added_num = added_num + 1
         WHERE user_nickname = #{userName}
     </update>
 
     <update id="decreAddNum" parameterType="String">
-        UPDATE USER
+        UPDATE user
         SET add_num = add_num - 1
         WHERE user_nickname = #{userName}
     </update>
 
     <update id="decreAddedNum" parameterType="String">
-        UPDATE USER
+        UPDATE user
         SET added_num = added_num - 1
         WHERE user_nickname = #{userName}
     </update>
@@ -50,14 +50,14 @@
     <select id="addshiplist" parameterType="string" resultMap="rm">
         SELECT s.usership_id, s.friend_nickname, u.user_photo, u.cook_count, s.create_time
         FROM (SELECT * FROM usership WHERE self_nickname = #{selfName} AND ship_type = 1 AND ship_status = 1) s
-            LEFT JOIN USER u
+            LEFT JOIN user u
         ON s.friend_nickname = u.user_nickname
     </select>
 
     <select id="addedshiplist" parameterType="string" resultMap="rm">
         SELECT s.usership_id, s.friend_nickname, u.user_photo, u.cook_count, s.create_time
         FROM (SELECT * FROM usership WHERE self_nickname = #{selfName} AND ship_type = -1 AND ship_status = 1) s
-            LEFT JOIN USER u
+            LEFT JOIN user u
         ON s.friend_nickname = u.user_nickname
     </select>
 

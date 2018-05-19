@@ -8,9 +8,7 @@
         <id column="cookbook_id" property="cookbookId"/>
         <result column="cookbook_name" property="cookbookName"/>
         <result column="cookbook_type" property="cookbookType"/>
-        <result column="cookbook_occasion" property="cookbookOccasion"/>
-        <result column="cookbook_crowd" property="cookbookCrowd"/>
-        <result column="cookbook_effect" property="cookbookEffect"/>
+        <result column="type_id" property="typeId"/>
         <result column="cookbook_material" property="materials"/>
         <result column="cook_step" property="cookbookSteps"/>
         <result column="cookbook_picture" property="cookImage"/>
@@ -29,7 +27,26 @@
         <result column="cookbook_name" property="cookbookName"/>
         <result column="cookbook_picture" property="cookImage"/>
         <result column="cookbook_desc" property="cookbookDesc"/>
+        <result column="read_num" property="readNum"/>
+        <result column="cook_num" property="cookNum"/>
+        <result column="score" property="score"/>
     </resultMap>
+
+    <insert id="loadCookBook" useGeneratedKeys="true" parameterType="CookBook" keyProperty="cookbookId">
+        INSERT INTO cookbook(cookbook_id, cookbook_name, type_id, cookbook_material, cook_step, cookbook_picture, cookbook_desc, user_name, cook_num, score )
+        VALUES (
+          #{cookbookId},
+          #{cookbookName, jdbcType=VARCHAR},
+          #{typeId, jdbcType=INTEGER},
+          #{materials, jdbcType=VARCHAR},
+          #{cookbookSteps, jdbcType=VARCHAR},
+          #{cookImage, jdbcType=VARCHAR},
+          #{cookbookDesc, jdbcType=VARCHAR},
+          #{userName, jdbcType=VARCHAR},
+          #{cookNum, jdbcType=INTEGER},
+          #{score, jdbcType = FLOAT}
+        )
+    </insert>
 
     <insert id="addCookBook" parameterType="CookBook" useGeneratedKeys="true" keyProperty="cookbookId">
         INSERT INTO cookbook(cookbook_id, cookbook_picture)
@@ -46,7 +63,7 @@
 
     <select id="queryById" resultMap="rm">
         SELECT c.*, u.user_photo
-        FROM (SELECT * FROM cookbook WHERE cookbook_id = #{cookbookId} AND STATUS = 0) c LEFT JOIN USER u
+        FROM (SELECT * FROM cookbook WHERE cookbook_id = #{cookbookId} AND STATUS = 0) c LEFT JOIN user u
         ON c.user_name = u.user_nickname
     </select>
 
@@ -61,14 +78,62 @@
         WHERE STATUS = 0 ORDER BY birth_time DESC LIMIT 9
     </select>
 
+    <select id="queryListByType" resultMap="rm2" parameterType="int">
+        SELECT cookbook_id, cookbook_name, cookbook_picture, cookbook_desc
+        FROM cookbook
+        WHERE type_id = #{typeId} AND STATUS = 0 ORDER BY birth_time DESC
+    </select>
+
+    <select id="queryListByCount" resultMap="rm2">
+        SELECT cookbook_id, cookbook_name, cookbook_picture, cookbook_desc, cook_num
+        FROM cookbook
+        WHERE STATUS = 0 ORDER BY cook_num DESC
+    </select>
+
+    <select id="queryListByScore" resultMap="rm2">
+        SELECT cookbook_id, cookbook_name, cookbook_picture, cookbook_desc, score
+        FROM cookbook
+        WHERE STATUS = 0 ORDER BY score DESC
+    </select>
+
+    <select id="queryListByReadNum" resultMap="rm2">
+        SELECT cookbook_id, cookbook_name, cookbook_picture, cookbook_desc, read_num
+        FROM cookbook
+        WHERE STATUS = 0 ORDER BY read_num DESC
+    </select>
+
+    <select id="queryListByCountLimit" resultMap="rm2">
+        SELECT cookbook_id, cookbook_name, cookbook_picture, cookbook_desc, cook_num
+        FROM cookbook
+        WHERE STATUS = 0 ORDER BY cook_num DESC LIMIT 3
+    </select>
+
+    <select id="queryListByScoreLimit" resultMap="rm2">
+        SELECT cookbook_id, cookbook_name, cookbook_picture, cookbook_desc, score
+        FROM cookbook
+        WHERE STATUS = 0 ORDER BY score DESC LIMIT 3
+    </select>
+
+    <select id="queryListByReadNumLimit" resultMap="rm2">
+        SELECT cookbook_id, cookbook_name, cookbook_picture, cookbook_desc, read_num
+        FROM cookbook
+        WHERE STATUS = 0 ORDER BY read_num DESC LIMIT 3
+    </select>
+
     <update id="increCookCount" parameterType="string">
-        UPDATE USER
+        UPDATE user
             SET cook_count = cook_count + 1
         WHERE  user_nickname = #{userName}
     </update>
 
+    <update id="increReadCount" parameterType="int">
+        update cookbook
+          set read_num = read_num + 1
+        where cookbook_id = #{cookbookId}
+    </update>
+
     <update id="decreCookCount" parameterType="string">
-        UPDATE USER
+        UPDATE user
         SET cook_count = cook_count - 1
         WHERE user_nickname = #{userName}
     </update>
@@ -84,6 +149,7 @@
             cookbook_name = #{cookbookName},
             cookbook_material = #{materials},
             cook_step = #{cookbookSteps},
+            type_id = #{typeId},
             cookbook_desc = #{cookbookDesc},
             <if test="userName != null">user_name = #{userName},</if>
             cookbook_tips = #{cookbookTips},

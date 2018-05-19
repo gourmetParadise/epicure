@@ -27,6 +27,12 @@ public enum ErrorCode {
     COOKBOOK_UPLOAD_SUCC(10000, "菜谱上传成功"),
     COOKBOOK_UPLOAD_FAIL(10001, "菜谱上传失败"),
 
+    WORK_UPLOAD_SUCC(10000, "作品上传成功"),
+    WORK_UPLOAD_FAIL(10001, "作品上传失败"),
+
+    SCORE_SUCC(10000, "评分成功"),
+    SCORE_FAIL(10001, "评分失败"),
+
     COOKBOOK_UPDATE_SUCC(10000, "菜谱修改成功"),
     COOKBOOK_UPDATE_FAIL(10001, "菜谱修改失败"),
 
@@ -52,6 +58,7 @@ public enum ErrorCode {
     NOT_FOLLOW(10001, "没关注"),
 
     QUERY_SUCCESS(10000, "查询成功"),
+    QUERY_FAIL(10001, "查询失败"),
 
     SERVER_INTERNAL_FAIL(9999, "服务内部错误");
 

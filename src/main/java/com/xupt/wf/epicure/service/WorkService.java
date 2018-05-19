@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,17 +33,56 @@ public class WorkService {
     @Transactional
     public Map<String, Object> addWorkImage(String workPath){
         Map<String, Object> resultMap = new HashMap<>();
-        Integer workId = 0;
-        int count = workMapper.addWork(workId, workPath);
+        Work work = new Work();
+        work.setWorkImage(workPath);
+        int count = workMapper.addWork(work);
+        int workId = work.getWorkId();
         if(count == 1){
             resultMap.put("workId", workId);
-            resultMap.put("workImage", workPath);
+            resultMap.put("filePath", workPath);
         }
         return resultMap;
     }
 
-//    public boolean updateWork(Work work) {
-//
-//    }
+    @Transactional
+    public boolean updateWork(Work work) {
+        boolean result = false;
+        int count = workMapper.updateWork(work);
+        if(1 == count) {
+            int cookbookId = work.getCookbookId();
+            count = workMapper.incrCookCount(cookbookId);
+            if(1 == count){
+                result = true;
+            }
+        }
+        return result;
+    }
 
+    public Work getWorkById(int workId){
+        return workMapper.getworkById(workId);
+    }
+
+    public boolean addScore(HttpServletRequest request, int workId, float workScore){
+        boolean result = false;
+        Integer cookbookId = (Integer) request.getSession().getAttribute("cookbookId");
+        request.getSession().removeAttribute("cookbookId");
+        int count = workMapper.updateScore(workScore, workId);
+        if(1 == count && cookbookId != null) {
+            List<Float> scoreList = workMapper.getScoreList(cookbookId);
+            if(scoreList != null && scoreList.size() > 0){
+                float avgScore = 0;
+                int n = scoreList.size();
+                for (Float score : scoreList ) {
+                    avgScore += score;
+                }
+                avgScore = avgScore / n;
+                avgScore =  (float)(Math.round(avgScore*10))/10;
+                count = workMapper.updateAvgScore(avgScore, cookbookId);
+                if(count == 1){
+                    result = true;
+                }
+            }
+        }
+        return result;
+    }
 }

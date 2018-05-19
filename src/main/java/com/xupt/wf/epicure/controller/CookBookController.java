@@ -3,8 +3,10 @@ package com.xupt.wf.epicure.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.xupt.wf.epicure.entity.CookBook;
+import com.xupt.wf.epicure.entity.UserHistory;
 import com.xupt.wf.epicure.errorCode.ErrorCode;
 import com.xupt.wf.epicure.service.CookBookService;
+import com.xupt.wf.epicure.service.UserHistoryService;
 import com.xupt.wf.epicure.tools.FileUtils;
 import com.xupt.wf.epicure.tools.RequestUtils;
 import com.xupt.wf.epicure.tools.ResultEntity;
@@ -34,6 +36,9 @@ public class CookBookController {
 
     @Autowired
     private CookBookService cookBookService;
+
+    @Autowired
+    private UserHistoryService userHistoryService;
 
     @RequestMapping(value = "/uploadImage", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String uploadcookImage(@RequestParam("file") MultipartFile file , HttpServletRequest request){
@@ -96,6 +101,8 @@ public class CookBookController {
         cookBook.setCookbookId(jsonCook.getInteger("cookbookId"));
         cookBook.setCookbookName(jsonCook.getString("cookbookName"));
         cookBook.setMaterials(jsonCook.getString("materials"));
+        cookBook.setTypeId(jsonCook.getInteger("typeId"));
+        LOGGER.info("=====================typeId=" + jsonCook.getInteger("typeId"));
         cookBook.setCookbookSteps(jsonCook.getString("cookbookSteps"));
         cookBook.setCookbookDesc(jsonCook.getString("cookbookDesc"));
         cookBook.setUserName(jsonCook.getString("userName"));
@@ -115,6 +122,8 @@ public class CookBookController {
         cookBook.setCookbookId(jsonCook.getInteger("cookbookId"));
         cookBook.setCookbookName(jsonCook.getString("cookbookName"));
         cookBook.setMaterials(jsonCook.getString("materials"));
+        cookBook.setTypeId(jsonCook.getInteger("typeId"));
+        LOGGER.info("=====================typeId=" + jsonCook.getInteger("typeId"));
         cookBook.setCookbookSteps(jsonCook.getString("cookbookSteps"));
         cookBook.setCookbookDesc(jsonCook.getString("cookbookDesc"));
         cookBook.setCookbookTips(jsonCook.getString("cookbookTips"));
@@ -124,7 +133,7 @@ public class CookBookController {
             return JSONObject.toJSONString(new ResultEntity<>(ErrorCode.COOKBOOK_UPDATE_FAIL.getStatus(), "", ErrorCode.COOKBOOK_UPDATE_SUCC.getMsg()));
         }
     }
-
+    
     @RequestMapping(value = "/{userName}/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public String cookbookList(@PathVariable("userName") String userName){
         return JSONObject.toJSONString(new ResultEntity<>(ErrorCode.QUERY_SUCCESS.getStatus(),"", cookBookService.queryListByName(userName)));
@@ -136,8 +145,19 @@ public class CookBookController {
     }
 
     @RequestMapping(value = "/{cookbookId}/info", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public String cookbookInfo(@PathVariable("cookbookId") Integer cookbookId){
-        return JSONObject.toJSONString(new ResultEntity<>(ErrorCode.QUERY_SUCCESS.getStatus(),"", cookBookService.queryInfoById(cookbookId)));
+    public String cookbookInfo(@PathVariable("cookbookId") Integer cookbookId, HttpSession session){
+        String userName = (String) session.getAttribute("nickName");
+        CookBook cookbook = cookBookService.queryInfoById(cookbookId);
+        if(cookbook != null ) {
+            cookBookService.increReadCount(cookbookId);
+            if(userName != null) {
+                userHistoryService.addHistory(cookbook, userName);
+            }
+            return JSONObject.toJSONString(new ResultEntity<>(ErrorCode.QUERY_SUCCESS.getStatus(),"", cookbook));
+        } else {
+            return JSONObject.toJSONString(new ResultEntity<>(ErrorCode.QUERY_FAIL.getStatus(),"", ErrorCode.QUERY_FAIL.getMsg()));
+        }
+
     }
 
     @RequestMapping(value = "/{cookbookId}/{userName}/delete", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")

@@ -67,6 +67,25 @@ public class CookBookService {
     }
 
     @Transactional
+    public boolean loadCookBook(List<CookBook> list){
+        boolean result = false;
+        for (CookBook cookBook : list) {
+            int effect = cookBookMapper.loadCookBook(cookBook);
+            if(effect == 1){
+                //用户上传菜谱数加一
+                cookBookMapper.increCookCount(cookBook.getUserName());
+                List<Ingredients> ingreList = listMaterials(cookBook);
+                int count = ingreList.size();
+                if(count == ingreMapper.addList(ingreList)){
+                    result = true;
+                }
+            }
+        }
+        return result;
+    }
+
+
+    @Transactional
     public int updateImage(Integer cookbookId, String imagePath){
         return cookBookMapper.updateImage(cookbookId, imagePath);
     }
@@ -94,6 +113,10 @@ public class CookBookService {
         return cookBook;
     }
 
+    public int increReadCount(Integer cookbookId){
+        return cookBookMapper.increReadCount(cookbookId);
+    }
+
     public List<CookBook> queryListByName(String userName){
         return cookBookMapper.queryListByName(userName);
     }
@@ -116,6 +139,7 @@ public class CookBookService {
     }
 
     public List<Ingredient> listMaterials(String materials){
+        LOGGER.info("====================materials= " + materials);
         JSONArray jsonArray = JSONArray.parseArray(materials);
         Iterator it = jsonArray.iterator();
         List<Ingredient> ingreList = new ArrayList<>();
