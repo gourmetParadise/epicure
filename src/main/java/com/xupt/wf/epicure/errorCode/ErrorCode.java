@@ -60,6 +60,9 @@ public enum ErrorCode {
     QUERY_SUCCESS(10000, "查询成功"),
     QUERY_FAIL(10001, "查询失败"),
 
+    RECOMMEND_SUCC(10000, "推荐成功"),
+    RECOMMEND_FAIL(10001, "推荐成功"),
+
     SERVER_INTERNAL_FAIL(9999, "服务内部错误");
 
     private int status;

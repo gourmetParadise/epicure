@@ -194,4 +194,21 @@ public class CookBook {
     public void setScore(Float score) {
         this.score = score;
     }
+
+    @Override
+    public String toString() {
+        return "CookBook{" +
+                "cookbookId=" + cookbookId +
+                ", cookbookName='" + cookbookName + '\'' +
+                ", typeId=" + typeId +
+                ", cookbookSteps='" + cookbookSteps + '\'' +
+                ", cookbookDesc='" + cookbookDesc + '\'' +
+                ", userName='" + userName + '\'' +
+                ", collectNum=" + collectNum +
+                ", readNum=" + readNum +
+                ", ingreList=" + ingreList +
+                ", cookNum=" + cookNum +
+                ", score=" + score +
+                '}';
+    }
 }

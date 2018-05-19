@@ -8,7 +8,7 @@ import com.xupt.wf.epicure.vo.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,6 +44,65 @@ public class UserHistoryService {
 
     public List<UserHistory> queryHistory(String userName){
         return userHistoryMapper.queryListByName(userName);
+    }
+
+    //给某个用户做推荐
+    public List<CookBook> recommend(String userName){
+
+        //获取用户历史记录
+        List<UserHistory> historyList = queryHistory(userName);
+
+        Set<Integer> typeSet = new HashSet<>();
+        Set<Integer> idSet = new HashSet<>();
+        Set<String> nameSet = new HashSet<>();
+        Set<String> materialsSet = new HashSet<>();
+        Map<Integer, String> idName = new HashMap<>();
+
+        System.out.println("=============" + historyList.toString());
+
+        for (UserHistory userHistory: historyList) {
+            int typeId = userHistory.getTypeId();
+            int cookbookId = userHistory.getCookbookId();
+            String cookbookName = userHistory.getCookbookName();
+            typeSet.add(typeId);
+            idSet.add(cookbookId);
+            idName.put(cookbookId, cookbookName);
+            nameSet.add(cookbookName);
+            String[] materials = userHistory.getMaterials().split(",");
+            int n = materials.length;
+            for (int i = 0; i < n; i++){
+                materialsSet.add(materials[i]);
+            }
+        }
+        System.out.println("UserHistoryService.recommend = " + typeSet.size());
+        System.out.println("===========" + materialsSet.toString());
+
+        //TODO 1、根据类别推荐
+        List<CookBook> list = recommendByType(typeSet, idSet);
+        if(null != list){
+            return list;
+        } else {
+            //再用户为访问过的菜谱中，随机推荐
+            return null;
+        }
+    }
+
+    // 1、根据类别推荐
+    public List<CookBook> recommendByType(Set<Integer> typeSet, Set<Integer> idSet){
+        List<Integer> typeList = new ArrayList<>(typeSet);
+        System.out.println("=================" + typeList.size());
+        System.out.println("=================" + typeList.toString());
+        List<CookBook> list = userHistoryMapper.recommendByType(typeList);
+        System.out.println("===============" + list.size());
+        System.out.println("===============" + list.toString());
+        Iterator<CookBook> it =  list.iterator();
+        while (it.hasNext()) {
+            CookBook cookBook = it.next();
+            if(idSet.contains(cookBook.getCookbookId())){
+                it.remove();
+            }
+        }
+        return list;
     }
 
     public String listMaterilas(List<Ingredient> materList){

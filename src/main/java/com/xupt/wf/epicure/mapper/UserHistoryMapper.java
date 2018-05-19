@@ -1,8 +1,10 @@
 package com.xupt.wf.epicure.mapper;
 
+import com.xupt.wf.epicure.entity.CookBook;
 import com.xupt.wf.epicure.entity.UserHistory;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,4 +19,5 @@ public interface UserHistoryMapper {
 
     List<UserHistory> queryListByName(String userName);
 
+    List<CookBook> recommendByType(List<Integer> typeIdSet);
 }

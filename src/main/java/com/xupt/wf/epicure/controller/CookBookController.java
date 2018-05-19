@@ -157,8 +157,8 @@ public class CookBookController {
         } else {
             return JSONObject.toJSONString(new ResultEntity<>(ErrorCode.QUERY_FAIL.getStatus(),"", ErrorCode.QUERY_FAIL.getMsg()));
         }
-
     }
+
 
     @RequestMapping(value = "/{cookbookId}/{userName}/delete", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public String deleteCookbook(@PathVariable("userName") String userName, @PathVariable("cookbookId") Integer cookbookId){

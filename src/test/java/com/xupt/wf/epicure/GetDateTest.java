@@ -3,6 +3,7 @@ package com.xupt.wf.epicure;
 import com.alibaba.fastjson.JSONObject;
 import com.xupt.wf.epicure.entity.CookBook;
 import com.xupt.wf.epicure.service.CookBookService;
+import com.xupt.wf.epicure.service.UserHistoryService;
 import com.xupt.wf.epicure.vo.Ingredient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,11 +32,21 @@ public class GetDateTest {
     @Autowired
     private CookBookService cookBookService;
 
+    @Autowired
+    private UserHistoryService userHistoryService;
+
     @Test
     public void testGetData(){
         List<CookBook> list = readCSV("src/data/家常菜 - 副本1.csv");
         System.out.println(list.size());
         cookBookService.loadCookBook(list);
+    }
+
+    @Test
+    public void testRecommend(){
+        List<CookBook> list = userHistoryService.recommend("admin3");
+        System.out.println("GetDateTest.testRecommend= " + list.size());
+        System.out.println(list.toString());
     }
 
     public static List<CookBook> readCSV(String fileName){

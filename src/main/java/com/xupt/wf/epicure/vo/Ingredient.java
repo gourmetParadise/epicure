@@ -27,4 +27,12 @@ public class Ingredient {
     public void setAmount(String amount) {
         this.amount = amount;
     }
+
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "source='" + source + '\'' +
+                ", amount='" + amount + '\'' +
+                '}';
+    }
 }
