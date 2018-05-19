@@ -91,7 +91,7 @@ public class ResolveCSV {
         return JSONObject.toJSONString(list);
     }
 
-    public static void main(String[] args) {
-        readCSV("src/data/家常菜 - 副本1.csv");
-    }
+//    public static void main(String[] args) {
+//        readCSV("src/data/家常菜 - 副本1.csv");
+//    }
 }
